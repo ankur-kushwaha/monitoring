@@ -1,0 +1,58 @@
+body{
+	background-color: black;
+}
+.base{
+	background-color: white;
+	overflow: auto;
+}
+.container{
+	margin-left:150px;	
+	padding:10px;
+}
+.sidebar{
+	float:left;
+	padding:10px;
+	height: 80%
+}
+.sidebar table{
+	border:1px solid #E6E6E6;
+	width:150px;
+	margin-bottom: 10px;
+}
+.sidebar a{
+	color:black;
+}
+#statusMessage p{
+	border:1px solid;
+	padding: 5px;
+	margin:10px;
+}
+.status td,.checkup td,.consumer td{
+	border:1px solid;
+}
+
+table td{
+	padding: 5px;
+}
+table th{
+	border:1px solid black; 
+	padding:5px; 
+	text-transform: uppercase;
+	background-color: #E6E6E6;
+	color: black;
+}
+.wrapper{
+	width:1000px;
+	margin:auto;
+}
+.header{
+	background-color: #E6E6E6;
+}
+.header p{
+	padding: 10px;
+	font-size: 30px;
+}
+#footer{
+	height: 100px;
+	background-color: #E6E6E6;
+}
