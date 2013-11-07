@@ -1,8 +1,12 @@
 package springapp.repository;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import springapp.domain.BusDate;
@@ -13,12 +17,10 @@ import springapp.mapper.ContactMapper;
 
 @Component 
 public class ContactDAO {
- 
+	
+	@Autowired
     private SqlSessionFactory sqlSessionFactory;
  
-    public ContactDAO(){
-        sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
-    }
  
     /**
      * Returns the list of all Contact instances from the database.

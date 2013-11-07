@@ -16,20 +16,34 @@
 		base-package="springapp.domain,springapp.web,springapp.service,springapp.repository" />
 
 	<mvc:annotation-driven />
- 
-	<!-- If no extension matched, use JSP view -->
 	
+	
+	<bean id="sqlSessionFactory" class="org.apache.ibatis.session.SqlSessionFactory">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="springDataSource" class="oracle.jdbc.pool.OracleDataSource"
+		destroy-method="close">
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:SPRING_TEST" />
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+		<property name="removeAbandoned" value="true" />
+		<property name="initialSize" value="20" />
+		<property name="maxActive" value="30" />
+	</bean>
+	<!-- If no extension matched, use JSP view -->
+
 	<bean id="viewResolver"
-	      class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
-              <property name="prefix">
-                 <value>/WEB-INF/jsp/</value>
-              </property>
-              <property name="suffix">
-                 <value>.jsp</value>
-              </property>
-        </bean>
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/jsp/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
 	<bean id="messageSource"
-                class="org.springframework.context.support.ResourceBundleMessageSource">
-                <property name="basename" value="messages" />
-        </bean>
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages" />
+	</bean>
 </beans>
