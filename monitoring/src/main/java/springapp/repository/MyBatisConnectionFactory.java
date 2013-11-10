@@ -16,6 +16,7 @@ public class MyBatisConnectionFactory {
 	static {
 		try {
 			String resource = "mysql.xml";
+			//String resource="";
 			Reader reader = Resources.getResourceAsReader(resource);
 
 			if (sqlSessionFactory == null) {

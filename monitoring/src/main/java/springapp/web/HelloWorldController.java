@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +29,7 @@ public class HelloWorldController {
 	public String index() {
 		return "index";
 	}	
-	
+
 	@RequestMapping(value="/getStatus.htm",method = RequestMethod.GET)
 	public ModelAndView hello() {
 		logger.info("getStatus");

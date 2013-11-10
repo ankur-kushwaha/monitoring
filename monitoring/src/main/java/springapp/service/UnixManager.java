@@ -68,10 +68,12 @@ public class UnixManager {
 					logger.info("available: " + in.available());
 					while (in.available() > 0) {
 						int i = in.read(temp, 0, 1024);
+						logger.info(i);
 						if (i < 0)
 							break;
-						output = output + new String(temp, 0, 1024);
+						output = output + new String(temp, 0, i);
 					}
+					
 					
 					if (channel.isClosed()) {
 						logger.info("exit status" + channel.getExitStatus());
@@ -86,13 +88,6 @@ public class UnixManager {
 				}
 				channel.disconnect();
 				session.disconnect();
-				
-				
-				
-				output.replace((char)10,'_');
-				for(int i=0;i<output.length();i++){
-					System.out.println(output.charAt(i)+":"+(int)output.charAt(i));
-				}
 				return output;
 			} catch (Exception e) {
 				e.printStackTrace();
