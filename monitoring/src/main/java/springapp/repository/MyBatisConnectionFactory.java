@@ -19,8 +19,7 @@ public class MyBatisConnectionFactory {
 			Reader reader = Resources.getResourceAsReader(resource);
 
 			if (sqlSessionFactory == null) {
-				sqlSessionFactory = new SqlSessionFactoryBuilder()
-						.build(reader);
+				sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 				sqlSessionFactory.getConfiguration().addMapper(
 						ContactMapper.class);
 			}

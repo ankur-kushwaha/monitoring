@@ -12,8 +12,13 @@
 		<textarea rows="5" cols="50" name="command"></textarea>
 		<input type="submit"> 
 	</form>
-	<div>
+	<div id="output">
 	<c:out value="${model.output}" />
 	</div>
+	<script>
+		$('document').ready(function(){
+			$('#output').text().replace(" ",",");
+		})
+	</script>
 </body>
 </html>

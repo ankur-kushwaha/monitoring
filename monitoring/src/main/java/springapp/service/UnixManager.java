@@ -1,13 +1,11 @@
 package springapp.service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -23,80 +21,88 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 @Service
-public class UnixManager{
+public class UnixManager {
 	Session session;
 	JSch jsch;
-	private PrintWriter stdin;
-	private BufferedReader br;
 	protected final Log logger = LogFactory.getLog(getClass());
+	private String output;
+	private InputStream in;
+	private OutputStream out;
+	private PrintStream ps;
 
 	public String getOutput(final String command) {
-		if (session.isConnected()) {
 			try {
+
+				jsch = new JSch();
+
+				try {
+					session = jsch.getSession("Ankur", "localhost", 22);
+				} catch (JSchException e) {
+					e.printStackTrace();
+				}
+				session.setPassword("0");
+				Properties config = new Properties();
+				config.put("StrictHostKeyChecking", "no");
+				session.setConfig(config);
+				try {
+					session.connect(3000);
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				output = "";
 				Channel channel = session.openChannel("exec");
 				((ChannelExec) channel).setCommand(command);
-				
-				final PipedInputStream pis = new PipedInputStream();
-				channel.setOutputStream(new PipedOutputStream(pis));
-				
+				channel.setInputStream(null);
+				// OutputStream out=channel.getOutputStream();
+				InputStream in = channel.getInputStream();
+				channel.connect();
+
 				logger.info("channel connected: " + channel.isConnected());
-				// TODO Auto-generated method stub
-				channel.connect(3000);
-				new Thread(new Runnable() {
-					public void run() {
-						try {
-							int i=0;
-							while ((i = pis.read()) != -1) {
-								char c = (char) i;
-								System.out.print(c);
-							}
-							
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+				logger.info("command written");
+				byte[] temp = new byte[1024];
+				while (true) {
+					logger.info("channnel: " + channel.isConnected());
+					logger.info("available: " + in.available());
+					while (in.available() > 0) {
+						int i = in.read(temp, 0, 1024);
+						if (i < 0)
+							break;
+						output = output + new String(temp, 0, 1024);
 					}
-				}).start();
-				Thread.sleep(1000);
+					
+					if (channel.isClosed()) {
+						logger.info("exit status" + channel.getExitStatus());
+						break;
+					}
+
+					try {
+						Thread.sleep(1000);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				channel.disconnect();
+				session.disconnect();
 				
 				
 				
-				return command;
+				output.replace((char)10,'_');
+				for(int i=0;i<output.length();i++){
+					System.out.println(output.charAt(i)+":"+(int)output.charAt(i));
+				}
+				return output;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return e.toString();
 			}
-		} else {
-			startServer();
-			return "server not connected";
-		}
-	}
-
+		} 
 	@PostConstruct
 	private void startServer() {
 		// TODO Auto-generated method stub
-		jsch = new JSch();
 
-		try {
-			session = jsch.getSession("Ankur", "localhost", 22);
-		} catch (JSchException e) {
-			e.printStackTrace();
-		}
-		session.setPassword("0");
-		// Create UserInfo instance in order to support SFTP connection to any
-		// machine
-		// without a key username and password will be given via UserInfo
-		// interface.
-		Properties config = new Properties();
-		config.put("StrictHostKeyChecking", "no");
-		session.setConfig(config);
-		try {
-			session.connect(3000);
-		} catch (JSchException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.print(session.isConnected());
-	} 	
+	}
 
 }
