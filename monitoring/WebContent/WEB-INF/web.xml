@@ -12,6 +12,10 @@
 		<servlet-name>springapp</servlet-name>
 		<url-pattern>*.htm</url-pattern>
 	</servlet-mapping>
+		<servlet-mapping>
+		<servlet-name>springapp</servlet-name>
+		<url-pattern>*.json</url-pattern>
+	</servlet-mapping>
 	<jsp-config />
 	<web:welcome-file-list>
 		<web:welcome-file>redirect.jsp</web:welcome-file>

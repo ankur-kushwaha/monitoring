@@ -95,7 +95,6 @@
 
                         $('.correctDates').live('click',
                                 function() {
-                                    alert(1);
                                     $subarea = $(this).parent().siblings(
                                             '.subarea').text();
                                     console.log($subarea);
@@ -107,8 +106,6 @@
                                     });
                                 });
                         $('#correctDates').click(function() {
-                        	alert(1);
-                        	console.log(1);
                             $('table a').click();
                         });
                     })

@@ -3,13 +3,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-                           http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://www.springframework.org/schema/context 
-                           http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/mvc
-                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans     
+    	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
 	default-lazy-init="true">
 	<!-- the application context definition for the springapp DispatcherServlet -->
 
@@ -17,31 +16,34 @@
 		base-package="springapp.domain,springapp.web,springapp.service,springapp.repository" />
 
 	<mvc:annotation-driven />
+	
+	
+	<bean id="sqlSessionFactory" class="org.apache.ibatis.session.SqlSessionFactory">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="springDataSource" class="oracle.jdbc.pool.OracleDataSource"
+		destroy-method="close">
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:SPRING_TEST" />
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+		<property name="removeAbandoned" value="true" />
+		<property name="initialSize" value="20" />
+		<property name="maxActive" value="30" />
+	</bean>
+	<!-- If no extension matched, use JSP view -->
+
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass"
-			value="org.springframework.web.servlet.view.JstlView"></property>
-		<property name="prefix" value="/WEB-INF/jsp/"></property>
-		<property name="suffix" value=".jsp"></property>
+		<property name="prefix">
+			<value>/WEB-INF/jsp/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
 	</bean>
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basename" value="messages" />
 	</bean>
-	
-	<bean id="qa2" 
-      class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-      <property name="driverClassName" value="com.nuodb.jdbc.Driver"/>
-      <property name="url" value="jdbc:com.nuodb://localhost/test"/>
-      <property name="username" value="root"/>
-      <property name="password" value="root"/>
-   </bean>
-   
-   <bean id="sit" 
-      class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-      <property name="url" value="jdbc:mysql://localhost:3306/fode_data_load"/>
-      <property name="username" value="root"/>
-      <property name="password" value=""/>
-   </bean>
 </beans>

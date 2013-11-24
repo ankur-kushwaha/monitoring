@@ -8,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import springapp.domain.Consumers;
+import springapp.domain.Contact;
 import springapp.domain.Status;
 import springapp.domain.BusDate;
-import springapp.repository.ProductDao;
+import springapp.repository.ContactDAO;
 
 @Component
 public class SimpleProductManager implements ProductManager { 
@@ -19,39 +20,45 @@ public class SimpleProductManager implements ProductManager {
 	 */
 	private static final long serialVersionUID = 1L;
 	//private List<Product> products;   
+	
 	@Autowired
-	private ProductDao productDao; 
+	private ContactDAO contactDao;
+
+	private SimpleDateFormat sdf;
+
+	private String date;
+	
 	@Override
 	public List<Status> getStatus() {
         //return products;
-    	 List<Status> prod= productDao.getStatus();
+    	 List<Status> prod= contactDao.getStatus();
     	 return prod;
     }
 
 	@Override
 	public Object getODSConsumers() {
 		// TODO Auto-generated method stub
-		List<Consumers> consumers=productDao.getODSConsumers();
+		List<Consumers> consumers=contactDao.getODSConsumers();
 		return consumers;
 	}
 	@Override
 	public Object getWHConsumers() {
 		// TODO Auto-generated method stub
-		List<Consumers> consumers=productDao.getWHConsumers();
+		List<Consumers> consumers=contactDao.getWHConsumers();
 		return consumers;
 	}
 
-	@Override
-	public Object getSubArea() {
-		// TODO Auto-generated method stub
-		List<Consumers> consumers=productDao.getWHConsumers();
-		return consumers;
-	}
 
 	@Override
 	public Object routineCheckup() {
 		// TODO Auto-generated method stub
-		List<BusDate> routine=productDao.getBusDate();
+		sdf = new SimpleDateFormat("yyyy-MM-dd");
+        date = sdf.format(new Date());
+		List<BusDate> routine=contactDao.getBusDate();
+		for (BusDate busDate : routine) {
+			String bd = busDate.getBusinessDate();
+            busDate.setExpectedBusDate(bd.compareTo(date) + "");
+		}
 		return routine;
 	}
 
@@ -80,11 +87,18 @@ public class SimpleProductManager implements ProductManager {
 		c.add(Calendar.DATE,2);
 		nbd=sdf.format(c.getTime());
 		
-		query="update fode_data_load.subject_business_date  <br>"
-				+ "set business_date='"+bd+"',"
-				+ "next_business_date='"+nbd+"', "
-				+ "previous_business_date='"+pbd+"'  <br>"
-				+ "where sub_area='"+subarea+"';";
+		query="update fode_data_load.subject_business_dates  <br>"
+				+ "set subject_bus_date='"+bd+"',"
+				+ "subject_nxt_date='"+nbd+"', "
+				+ "subject_prv_date='"+pbd+"'  <br>"
+				+ "where subject_area_code='"+subarea+"';";
 		return query;
+	}
+
+	@Override
+	public List<Contact> dotest() {
+		// TODO Auto-generated method stub
+		List<Contact> contact=contactDao.selectAll();
+		return contact;
 	}
 }
